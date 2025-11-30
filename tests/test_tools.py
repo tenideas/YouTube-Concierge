@@ -1,5 +1,5 @@
 import unittest
-from unittest.mock import AsyncMock, create_autospec
+from unittest.mock import AsyncMock, create_autospec, MagicMock
 from app.tools import ListHistoryTool, CompareVideosTool
 from services.memory import MemoryService
 from services.comparator import ComparisonService

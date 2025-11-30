@@ -226,9 +226,9 @@ class Agent:
         '"Cleans markdown formatting from the LLM output and parses it as JSON."'
         text = text.strip()
         # Remove markdown code block delimiters if present.
-        text = re.sub(r"^```(json)?\s*", "", text, flags=re.MULTILINE)
+        text = re.sub(r"^\s*```(json)?\s*", "", text, flags=re.MULTILINE)
         text = re.sub(r"\s*```$", "", text, flags=re.MULTILINE)
-        
+
         try:
             data = json.loads(text)
             # Extract the plan and response fields, defaulting to empty list/None.
