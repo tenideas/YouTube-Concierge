@@ -127,7 +127,9 @@ class TestPlanAndExecuteAgent(unittest.IsolatedAsyncioTestCase):
         await self.agent.run("do it", "sess", "user")
         
         # Verify the tool was called with the state object.
-        local_tool.run.assert_called_with(state=ANY, url=None)
+        # We check only for the arguments explicitly passed in the call.
+        # The 'url' argument relies on its default value in the signature, so it is not in the call kwargs.
+        local_tool.run.assert_called_with(state=ANY)
 
     async def test_unknown_tool_recovery(self):
         """Tests that the agent recovers when it hallucinates a tool."""

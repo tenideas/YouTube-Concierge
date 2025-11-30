@@ -225,9 +225,22 @@ class Agent:
     def _clean_and_parse_json(self, text: str) -> AgentPlan:
         '"Cleans markdown formatting from the LLM output and parses it as JSON."'
         text = text.strip()
-        # Remove markdown code block delimiters if present.
-        text = re.sub(r"^\s*```(json)?\s*", "", text, flags=re.MULTILINE)
-        text = re.sub(r"\s*```$", "", text, flags=re.MULTILINE)
+        
+        # Use regex to find the JSON block inside markdown delimiters.
+        # This handles cases where the LLM outputs conversational text along with the JSON.
+        # Matches ```json ... ``` or just ``` ... ```
+        json_match = re.search(r"```(?:json)?\s*(.*?)\s*```", text, re.DOTALL | re.IGNORECASE)
+        
+        if json_match:
+            text = json_match.group(1)
+        
+        # Fallback: If no code blocks are found, try to locate the first curly brace
+        # and the last curly brace to extract the JSON object.
+        elif "{" in text:
+             first_brace = text.find("{")
+             last_brace = text.rfind("}")
+             if first_brace != -1 and last_brace != -1:
+                 text = text[first_brace : last_brace + 1]
 
         try:
             data = json.loads(text)
@@ -236,7 +249,7 @@ class Agent:
                 "plan": data.get("plan", []),
                 "response": data.get("response")
             }
-        except json.JSONDecodeError as e:
+        except json.JSONDecodeError:
             logger.error("Failed to parse LLM JSON: %s", text)
             # Return a safe fallback structure if JSON parsing fails.
             return {
