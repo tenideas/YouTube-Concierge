@@ -19,7 +19,7 @@ from config import settings
 from app.agent import Agent
 from app.tools import Tool, ListHistoryTool, FetchTranscriptTool
 
-class TestReActAgent(unittest.IsolatedAsyncioTestCase):
+class TestPlanAndExecuteAgent(unittest.IsolatedAsyncioTestCase):
     async def asyncSetUp(self):
         # Set up mocks for LLM, Memory, and history.
         self.mock_llm = MagicMock()

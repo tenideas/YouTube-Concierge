@@ -18,13 +18,15 @@ logger = logging.getLogger(__name__)
 
 
 class AgentPlan(TypedDict):
-    '"TypedDict representing the structure of the agent\'s execution plan."'
+    """TypedDict representing the structure of the agent's execution plan."""
     plan: List[Dict[str, Any]]
     response: Optional[str]
 
 
 class Agent:
-    '"The main orchestrator that manages the ReAct loop, tool execution, and memory updates."'
+    """The main orchestrator that implements a Plan-and-Execute workflow. 
+    It generates a complete execution plan using the LLM and then executes 
+    tools sequentially using a shared state."""
 
     def __init__(
         self,
